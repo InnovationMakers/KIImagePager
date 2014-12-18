@@ -7,6 +7,7 @@
 //
 
 #import "INMImageView.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface INMImageView()
 
@@ -36,8 +37,51 @@
     }
 }
 
+-(void)spinView:(UIView *)view forDuration:(CGFloat)duration
+               reverse:(BOOL)reverse
+           repeatCount:(NSUInteger)repeatCount {
+    CABasicAnimation* anim = [CABasicAnimation animationWithKeyPath:@"transform.rotation"];
+    [anim setToValue:[NSNumber numberWithFloat:(2 * M_PI)]];
+    [anim setFromValue:[NSNumber numberWithDouble:0.0f]];
+    [anim setDuration:duration];
+    [anim setRepeatCount:repeatCount];
+    [anim setAutoreverses:reverse];
+    [anim setRemovedOnCompletion:YES];
+    [view.layer addAnimation:anim forKey:@"Spin"];
+}
+
+
 -(void)loadImage:(NSString *)imageURL{
-    [self setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:self.placeholderImage];
+    
+    UIImageView* rotation = [[UIImageView alloc]initWithFrame:self.bounds];
+    [rotation setImage:[UIImage imageNamed:@"xh_arrow"]];
+    [rotation setContentMode:UIViewContentModeCenter];
+    [self addSubview:rotation];
+    
+    UIImageView* camera = [[UIImageView alloc]initWithFrame:self.bounds];
+    [camera setImage:[UIImage imageNamed:@"icon_machine_white"]];
+    [camera setContentMode:UIViewContentModeCenter];
+    [self addSubview:camera];
+
+    [self spinView:rotation forDuration:3.0 reverse:NO repeatCount:NSIntegerMax];
+    
+    [self setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageURL]] placeholderImage:nil
+        success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            
+            [rotation removeFromSuperview];
+            [camera removeFromSuperview];
+            [self setImage:image];
+        
+    }
+        failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+            [rotation removeFromSuperview];
+            [camera removeFromSuperview];
+            [self setContentMode:UIViewContentModeCenter];
+            [self setImage:[UIImage imageNamed:@"icon-placeholder"]];
+    }];
+    
+    
+    //[self setImageWithURL:[NSURL URLWithString:imageURL] placeholderImage:self.placeholderImage];
 }
 
 -(void)startAnimating{
