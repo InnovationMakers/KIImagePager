@@ -200,6 +200,7 @@
     } else {
         UIImageView *blankImage = [[UIImageView alloc] initWithFrame:_scrollView.frame];
         [blankImage setImage:[_dataSource placeHolderImageForImagePager]];
+        [blankImage setContentMode:[_dataSource contentModeForPlaceHolder]];
         [_scrollView addSubview:blankImage];
     }
 }
