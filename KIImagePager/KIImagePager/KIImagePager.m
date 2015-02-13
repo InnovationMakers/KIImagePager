@@ -77,7 +77,7 @@
     self.slideshowShouldCallScrollToDelegate = YES;
     self.captionBackgroundColor = [UIColor whiteColor];
     self.captionTextColor = [UIColor blackColor];
-    self.captionFont = [UIFont fontWithName:@"Helvetica-Light" size:12.0f];
+    self.captionFont = [UIFont fontWithName:@"Helvetica-Bold" size:12.0f];
     self.hidePageControlForSinglePages = YES;
     
     [self initializeScrollView];
@@ -124,18 +124,25 @@
 }
 
 - (void) initializeCaption {
-    _captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, _scrollView.frame.size.height - 40, _scrollView.frame.size.width, 40)];
+    
+    UIView *view  = [[ UIView alloc] initWithFrame:CGRectMake(0, _scrollView.frame.size.height - 60, _scrollView.frame.size.width, 60)];
+    [view setBackgroundColor:self.captionBackgroundColor];
+    view.alpha = 0.7f;
+    
+    _captionLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, _scrollView.frame.size.height - 60, _scrollView.frame.size.width - 40, 60)];
     [_captionLabel setNumberOfLines:0];
-    [_captionLabel setBackgroundColor:self.captionBackgroundColor];
     [_captionLabel setTextColor:self.captionTextColor];
+    [_captionLabel setTextAlignment:NSTextAlignmentCenter];
     [_captionLabel setFont:self.captionFont];
     
-    _captionLabel.alpha = 0.7f;
     _captionLabel.layer.cornerRadius = 5.0f;
     
-    
+    [self addSubview:view];
     [self addSubview:_captionLabel];
 }
+
+
+
 
 - (void) reloadData
 {
